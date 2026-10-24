@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosso Lar Imóveis | Compre e Alugue Direto com o Dono</title>
+  
+  <!-- Favicon Oficial da Aba (substitui o globo do navegador) -->
+  <link rel="icon" type="image/png" href="imagens/logo 3.png">
+  <link rel="apple-touch-icon" href="imagens/logo 3.png">
+  
+  <!-- Fontes Google: Poppins e Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#070e24',
+            brandDarker: '#040817',
+            brandPrimary: '#2563eb',
+            brandHover: '#1d4ed8',
+            brandLight: '#f8fafc',
+            brandSky: '#38bdf8',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            poppins: ['"Poppins"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    h1, h2, h3, .font-heading {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .hero-bg {
+      background-color: #070e24;
+      background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 1px);
+      background-size: 26px 26px;
+      isolation: isolate;
+    }
+
+    .hero-bg::before,
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.85;
+      filter: blur(18px);
+    }
+
+    .hero-bg::before {
+      inset: -35% -15%;
+      background: linear-gradient(118deg, transparent 38%, rgba(56, 189, 248, 0.14) 48%, transparent 58%);
+      transform: rotate(-7deg);
+    }
+
+    .hero-bg::after {
+      top: -25%;
+      right: -12%;
+      width: 58%;
+      height: 85%;
+      background: linear-gradient(140deg, transparent 38%, rgba(147, 197, 253, 0.11) 50%, transparent 62%);
+      transform: rotate(12deg);
+    }
+
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-100 { transition-delay: 150ms; }
+    .delay-200 { transition-delay: 300ms; }
+    .delay-300 { transition-delay: 450ms; }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .bank-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .bank-card.active {
+      border-color: #2563eb;
+      background-color: #0f1c3f;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-brandPrimary selection:text-white">
+
+  <!-- ================= TOPBAR & HEADER ================= -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo Oficial (Logo 2) -->
+        <a href="#" class="flex items-center group">
+          <img src="imagens/logo 2.png" alt="Nosso Lar Imóveis" class="h-12 w-auto object-contain transition-transform group-hover:scale-105 duration-300">
+        </a>
+
+        <!-- Menu Desktop: Todos com a mesma cor padrão -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <a href="#imoveis" class="hover:text-brandPrimary transition-colors">Imóveis</a>
+          <a href="#como-funciona" class="hover:text-brandPrimary transition-colors">Como Funciona</a>
+          <a href="#financiamento" class="hover:text-brandPrimary transition-colors">Simulador de Financiamento</a>
+          <a href="#avaliacoes" class="hover:text-brandPrimary transition-colors">Avaliações</a>
+        </nav>
+
+        <!-- Ações do Header: Botão Login / Painel Usuário -->
+        <div class="hidden md:flex items-center gap-3" id="authHeaderArea">
+          <button onclick="openModal('modalLogin')" id="btnLoginHeader" class="px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-brandPrimary hover:bg-brandHover shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+            <i class="fa-regular fa-user"></i>
+            Login
+          </button>
+
+          <!-- Perfil Ativo (Oculto até o login) -->
+          <button onclick="openModal('modalPerfil')" id="btnUserProfileHeader" class="hidden items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-all">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-xs font-bold text-slate-800" id="headerUserName">Minha Conta</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+          </button>
+        </div>
+
+        <!-- Botão Menu Mobile -->
+        <div class="flex md:hidden">
+          <button onclick="toggleMobileMenu()" class="p-2 rounded-xl text-slate-600 hover:text-brandDark hover:bg-slate-100 transition-colors">
+            <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-slate-100 px-6 py-5 shadow-xl">
+      <div class="flex flex-col gap-4 text-base font-semibold text-slate-700">
+        <a href="#imoveis" onclick="toggleMobileMenu()" class="hover:text-brandPrimary">Imóveis</a>
+        <a href="#como-funciona" onclick="toggleMobileMenu()" class="hover:text-brandPrimary">Como Funciona</a>
+        <a href="#financiamento" onclick="toggleMobileMenu()" class="hover:text-brandPrimary">Simulador de Financiamento</a>
+        <a href="#avaliacoes" onclick="toggleMobileMenu()" class="hover:text-brandPrimary">Avaliações</a>
+        
+        <div class="pt-2 border-t border-slate-100" id="mobileAuthArea">
+          <button onclick="toggleMobileMenu(); openModal('modalLogin')" id="btnMobileLogin" class="w-full py-3 rounded-xl font-bold text-white bg-brandPrimary hover:bg-brandHover shadow-md text-center flex items-center justify-center gap-2">
+            <i class="fa-regular fa-user"></i>
+            Fazer Login
+          </button>
+          <button onclick="toggleMobileMenu(); openModal('modalPerfil')" id="btnMobileProfile" class="hidden w-full py-3 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-user-circle"></i>
+            Acessar Meu Perfil & Histórico
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero-bg text-white pt-10 pb-14 lg:pt-14 lg:pb-20 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Headline Principal -->
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-white mb-6 leading-tight reveal-on-scroll">
+        Compre e Alugue <span class="text-brandSky">Direto com o Dono</span>
+      </h1>
+
+      <!-- Texto Subtítulo Formatado com partes em Negrito -->
+      <p class="max-w-4xl mx-auto text-slate-300 text-base sm:text-lg lg:text-[19px] font-normal leading-relaxed mb-8 reveal-on-scroll delay-100">
+        <strong class="font-bold text-white">Seu próximo imóvel começa aqui.</strong><br>
+        Na Nosso Lar Imóveis, conectamos você diretamente a proprietários e oportunidades, sem intermediários. De imóveis acessíveis a coberturas de alto padrão, descubra o lugar perfeito para viver seus sonhos. Mais liberdade para escolher. <strong class="font-bold text-white">Mais oportunidades para conquistar. Nosso Lar, seu próximo capítulo.</strong>
+      </p>
+
+      <!-- Painel de Busca com Layout Idêntico à Referência -->
+      <div class="max-w-4xl mx-auto bg-white rounded-3xl p-4 sm:p-6 shadow-2xl text-left text-slate-800 reveal-on-scroll delay-200">
+        
+        <!-- Abas Superior: Comprar / Alugar + Selo Verificado -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-1">
+            <button id="btnTabComprar" onclick="setSearchType('venda')" class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-brandPrimary text-white shadow-sm">
+              Comprar
+            </button>
+            <button id="btnTabAlugar" onclick="setSearchType('aluguel')" class="px-6 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+              Alugar
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-100">
+            <i class="fa-solid fa-certificate text-emerald-600"></i>
+            Proprietários com Identidade Verificada
+          </div>
+        </div>
+
+        <!-- Filtros em Linha -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-5 items-end">
+          
+          <!-- Localização -->
+          <div class="sm:col-span-4">
+            <label class="block text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">Localização</label>
+            <div class="relative">
+              <i class="fa-solid fa-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="filterLocation" placeholder="Bairro ou cidade..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-brandPrimary focus:ring-2 focus:ring-brandPrimary/20 transition-all">
+            </div>
+          </div>
+
+          <!-- Tipo de Imóvel -->
+          <div class="sm:col-span-3">
+            <label class="block text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">Tipo de Imóvel</label>
+            <div class="relative">
+              <i class="fa-solid fa-building absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <select id="filterType" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-brandPrimary focus:ring-2 focus:ring-brandPrimary/20 transition-all appearance-none cursor-pointer">
+                <option value="todos">Todos os Tipos</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Casa">Casa em Condomínio</option>
+                <option value="Cobertura">Cobertura</option>
+                <option value="Studio">Studio / Kitnet</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Faixa de Preço -->
+          <div class="sm:col-span-3">
+            <label class="block text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">Faixa de Preço</label>
+            <div class="relative">
+              <i class="fa-solid fa-tag absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <select id="filterPrice" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-brandPrimary focus:ring-2 focus:ring-brandPrimary/20 transition-all appearance-none cursor-pointer">
+                <option value="qualquer">Qualquer Valor</option>
+                <option value="ate-300">Até R$ 300 mil (ou R$ 2.000/mês)</option>
+                <option value="300-800">R$ 300k a R$ 800k (ou até R$ 5.000)</option>
+                <option value="800-2m">R$ 800k a R$ 2M</option>
+                <option value="acima-2m">Alto Padrão (> R$ 2M)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Botão de Ação -->
+          <div class="sm:col-span-2">
+            <button onclick="applyFilters()" class="w-full bg-brandPrimary hover:bg-brandHover text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-brandPrimary/30 hover:shadow-lg transition-all active:scale-95">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Buscar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Cards de Métricas com Count-Up -->
+      <div id="statsSection" class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-10 max-w-5xl mx-auto text-left reveal-on-scroll delay-300">
+        
+        <div class="bg-brandDarker/70 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="text-3xl sm:text-4xl font-black font-heading text-white tracking-tight" id="countPercent">0%</div>
+          <p class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Direto com Proprietários</p>
+        </div>
+
+        <div class="bg-brandDarker/70 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="text-3xl sm:text-4xl font-black font-heading text-brandSky tracking-tight" id="countSavings">R$ 0M+</div>
+          <p class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Economizados em Corretagem</p>
+        </div>
+
+        <div class="bg-brandDarker/70 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="text-3xl sm:text-4xl font-black font-heading text-white tracking-tight" id="countProperties">+0</div>
+          <p class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Imóveis Negociados</p>
+        </div>
+
+        <div class="bg-brandDarker/70 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="text-3xl sm:text-4xl font-black font-heading text-brandSky tracking-tight" id="countRating">0.0/5</div>
+          <p class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Avaliação dos Usuários</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= CATÁLOGO DE IMÓVEIS ================= -->
+  <section id="imoveis" class="py-14 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6 reveal-on-scroll">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-brandPrimary bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-100">Oportunidades Disponíveis</span>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-brandDark mt-3">Imóveis Recentes na Plataforma</h2>
+          <p class="text-slate-500 text-sm sm:text-base mt-2">Navegue pelas opções e entre em contato no mesmo instante com o proprietário.</p>
+        </div>
+
+        <!-- Filtros Rápidos de Categoria -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="filterCategory('todos')" class="cat-pill active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-brandDark border border-slate-200 shadow-sm hover:border-brandPrimary transition-all">Todos</button>
+          <button onclick="filterCategory('alto-padrao')" class="cat-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-600 border border-slate-200 shadow-sm hover:border-brandPrimary transition-all">Alto Padrão</button>
+          <button onclick="filterCategory('acessivel')" class="cat-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-600 border border-slate-200 shadow-sm hover:border-brandPrimary transition-all">Custo-Benefício</button>
+          <button onclick="filterCategory('aluguel-rapido')" class="cat-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-600 border border-slate-200 shadow-sm hover:border-brandPrimary transition-all">Para Alugar</button>
+        </div>
+      </div>
+
+      <!-- Grid de Imóveis -->
+      <div id="propertyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- Estado Vazio / Sem Resultados -->
+      <div id="noResults" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300">
+        <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-4"></i>
+        <h4 class="text-lg font-bold text-slate-700">Nenhum imóvel encontrado</h4>
+        <p class="text-sm text-slate-500 mt-1">Tente ajustar os filtros de busca para encontrar mais opções.</p>
+        <button onclick="resetFilters()" class="mt-4 px-5 py-2 rounded-xl text-sm font-bold bg-brandPrimary text-white">Limpar Filtros</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= COMO FUNCIONA (SOMBRAS SUAVIZADAS NOS BOTÕES 1, 2 E 3) ================= -->
+  <section id="como-funciona" class="py-14 bg-white border-y border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-10 reveal-on-scroll">
+        <span class="text-xs font-bold uppercase tracking-wider text-brandPrimary bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-100">Simples e Transparente</span>
+        <h2 class="text-3xl sm:text-4xl font-black font-heading text-brandDark mt-3">Como você negocia na Nosso Lar</h2>
+        <p class="text-slate-500 text-sm sm:text-base mt-2">Processo desburocratizado que conecta você diretamente a quem decide.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Passo 1: Azul Claro (Sombra Leve e Elegante) -->
+        <div class="bg-slate-50 border border-slate-100 rounded-3xl p-8 text-center relative group hover:shadow-xl transition-all duration-300 reveal-on-scroll delay-100">
+          <div class="w-16 h-16 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-2xl font-black font-heading mx-auto mb-6 shadow-sm group-hover:scale-105 transition-transform">
+            1
+          </div>
+          <h3 class="text-xl font-bold font-heading text-brandDark mb-3">Encontre seu Imóvel</h3>
+          <p class="text-slate-700 text-sm font-medium leading-relaxed">
+            Navegue por opções desde apartamentos acessíveis até coberturas de luxo com fotos reais e valores transparentes.
+          </p>
+        </div>
+
+        <!-- Passo 2: Azul Mediano (Sombra Leve e Elegante) -->
+        <div class="bg-slate-50 border border-slate-100 rounded-3xl p-8 text-center relative group hover:shadow-xl transition-all duration-300 reveal-on-scroll delay-200">
+          <div class="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-black font-heading mx-auto mb-6 shadow-sm group-hover:scale-105 transition-transform">
+            2
+          </div>
+          <h3 class="text-xl font-bold font-heading text-brandDark mb-3">Fale com o Proprietário</h3>
+          <p class="text-slate-700 text-sm font-medium leading-relaxed">
+            Converse pelo WhatsApp com quem é o dono do imóvel verificado, tire suas dúvidas e agende visitas presenciais com flexibilidade.
+          </p>
+        </div>
+
+        <!-- Passo 3: Azul Mais Escuro (Sombra Leve e Elegante) -->
+        <div class="bg-slate-50 border border-slate-100 rounded-3xl p-8 text-center relative group hover:shadow-xl transition-all duration-300 reveal-on-scroll delay-300">
+          <div class="w-16 h-16 rounded-2xl bg-brandDark text-white flex items-center justify-center text-2xl font-black font-heading mx-auto mb-6 shadow-sm group-hover:scale-105 transition-transform">
+            3
+          </div>
+          <h3 class="text-xl font-bold font-heading text-brandDark mb-3">Negocie e Conquiste</h3>
+          <p class="text-slate-700 text-sm font-medium leading-relaxed">
+            Feche o negócio com mais liberdade, condições favoráveis e sem a retenção de comissões de corretagem abusivas.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SIMULADOR DE FINANCIAMENTO COM AS LOGOS REAIS ================= -->
+  <section id="financiamento" class="py-14 bg-brandDark text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="text-center max-w-3xl mx-auto mb-10 reveal-on-scroll">
+        <span class="text-xs font-bold uppercase tracking-wider text-brandSky bg-brandSky/10 px-3.5 py-1.5 rounded-full border border-brandSky/20">Crédito & Financiamento</span>
+        <h2 class="text-3xl sm:text-4xl font-black font-heading text-white mt-3">Simulador de Financiamento Imobiliário</h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-2">Mesmo negociando direto com o proprietário, você pode financiar o imóvel pelo seu banco preferido com as melhores taxas do mercado.</p>
+      </div>
+
+      <!-- Seletor de Bancos Parceiros com as Logos Oficiais e Tamanhos Otimizados -->
+      <div class="mb-10 reveal-on-scroll">
+        <label class="block text-xs font-black uppercase tracking-wider text-slate-300 mb-3 text-center sm:text-left">ESCOLHA A INSTITUIÇÃO FINANCEIRA:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5" id="bankSelectorContainer">
+          
+          <!-- 1. Caixa -->
+          <button type="button" onclick="selectBank('caixa', 9.8, 'Caixa Econômica', 'imagens/caixa.png')" class="bank-card active p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/caixa.png" alt="Caixa Econômica" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Caixa</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 9,8% a.a.</span>
+          </button>
+
+          <!-- 2. Banco do Brasil -->
+          <button type="button" onclick="selectBank('bb', 10.1, 'Banco do Brasil', 'imagens/banco do brasil.png')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/banco do brasil.png" alt="Banco do Brasil" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Banco do Brasil</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 10,1% a.a.</span>
+          </button>
+
+          <!-- 3. Itaú -->
+          <button type="button" onclick="selectBank('itau', 10.3, 'Itaú Unibanco', 'imagens/itau.png')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/itau.png" alt="Itaú Unibanco" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Itaú</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 10,3% a.a.</span>
+          </button>
+
+          <!-- 4. Bradesco -->
+          <button type="button" onclick="selectBank('bradesco', 10.2, 'Bradesco', 'imagens/bradesco.jpg')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/bradesco.jpg" alt="Bradesco" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Bradesco</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 10,2% a.a.</span>
+          </button>
+
+          <!-- 5. Santander -->
+          <button type="button" onclick="selectBank('santander', 10.4, 'Santander', 'imagens/santander.png')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/santander.png" alt="Santander" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Santander</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 10,4% a.a.</span>
+          </button>
+
+          <!-- 6. Banco Inter -->
+          <button type="button" onclick="selectBank('inter', 9.9, 'Banco Inter', 'imagens/inter.png')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/inter.png" alt="Banco Inter" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Banco Inter</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 9,9% a.a.</span>
+          </button>
+
+          <!-- 7. Sicredi -->
+          <button type="button" onclick="selectBank('sicredi', 10.0, 'Sicredi', 'imagens/sicredi.webp')" class="bank-card p-3.5 rounded-2xl bg-brandDarker border-2 border-slate-700/80 hover:border-brandPrimary transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img src="imagens/sicredi.webp" alt="Sicredi" class="w-full h-full object-contain">
+            </div>
+            <span class="text-sm font-extrabold text-white group-hover:text-brandSky">Sicredi</span>
+            <span class="text-xs text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md">a partir de 10,0% a.a.</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Container do Simulador -->
+      <div class="bg-brandDarker border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl reveal-on-scroll">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Controles / Inputs -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Valor do Imóvel -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Valor do Imóvel</span>
+                <span id="labelImovelVal" class="text-lg font-bold text-white font-heading">R$ 500.000</span>
+              </div>
+              <input type="range" id="inputImovelVal" min="150000" max="4000000" step="25000" value="500000" oninput="calculateFinancing()" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brandPrimary">
+              <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                <span>R$ 150 mil</span>
+                <span>R$ 4 milhões</span>
+              </div>
+            </div>
+
+            <!-- Entrada (Mínimo 20%) -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Valor de Entrada (<span id="labelEntradaPercent">20%</span>)</span>
+                <span id="labelEntradaVal" class="text-lg font-bold text-white font-heading">R$ 100.000</span>
+              </div>
+              <input type="range" id="inputEntradaVal" min="30000" max="3200000" step="10000" value="100000" oninput="calculateFinancing()" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brandPrimary">
+              <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                <span id="minEntradaSpan">Mínimo: R$ 100.000</span>
+                <span>Pode usar FGTS</span>
+              </div>
+            </div>
+
+            <!-- Prazo e Sistema de Amortização -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Prazo de Pagamento</label>
+                <select id="selectPrazoAnos" onchange="calculateFinancing()" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-brandPrimary">
+                  <option value="30" selected>30 anos (360 meses)</option>
+                  <option value="35">35 anos (420 meses)</option>
+                  <option value="25">25 anos (300 meses)</option>
+                  <option value="20">20 anos (240 meses)</option>
+                  <option value="15">15 anos (180 meses)</option>
+                  <option value="10">10 anos (120 meses)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Amortização</label>
+                <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
+                  <button type="button" id="btnSAC" onclick="setAmortization('SAC')" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-brandPrimary text-white transition-all">SAC (Decrescente)</button>
+                  <button type="button" id="btnPRICE" onclick="setAmortization('PRICE')" class="flex-1 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">PRICE (Fixa)</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Card de Resultados do Financiamento com Logo Selecionada -->
+          <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-brandDark p-6 sm:p-8 rounded-2xl border border-slate-700/80 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow">
+                    <img id="selectedBankLogo" src="imagens/caixa.png" alt="Banco Selecionado" class="w-full h-full object-contain">
+                  </div>
+                  <div>
+                    <span id="selectedBankName" class="text-sm font-bold text-white block">Caixa Econômica</span>
+                    <span class="text-[10px] text-slate-400">Banco Selecionado</span>
+                  </div>
+                </div>
+                <span id="selectedBankRate" class="text-xs font-bold text-brandSky bg-brandSky/10 px-2.5 py-1 rounded-full border border-brandSky/20">9,8% ao ano</span>
+              </div>
+
+              <!-- Primeira Parcela -->
+              <div class="mt-6">
+                <span class="text-xs uppercase tracking-wider font-bold text-slate-400">Primeira Parcela Estimada</span>
+                <div id="resultPrimeiraParcela" class="text-3xl sm:text-4xl font-black font-heading text-white mt-1">R$ 3.840</div>
+              </div>
+
+              <!-- Detalhes do Financiamento -->
+              <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-800 text-left">
+                <div>
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 block font-semibold">Última Parcela</span>
+                  <span id="resultUltimaParcela" class="text-base font-bold text-slate-200 font-heading">R$ 1.120</span>
+                </div>
+                <div>
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 block font-semibold">Valor Financiado</span>
+                  <span id="resultFinanciado" class="text-base font-bold text-slate-200 font-heading">R$ 400.000</span>
+                </div>
+                <div class="col-span-2 pt-2">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 block font-semibold">Renda Familiar Recomendada</span>
+                  <span id="resultRendaMinima" class="text-base font-bold text-brandSky font-heading">R$ 12.800</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botão de Ação -->
+            <button onclick="openCustomWhatsApp()" class="w-full mt-6 py-3.5 px-4 rounded-xl font-bold text-sm bg-brandPrimary hover:bg-brandHover text-white shadow-lg shadow-brandPrimary/30 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+              Falar com Especialista em Financiamento
+            </button>
+            <p class="text-[10px] text-slate-400 text-center mt-2.5">Simulação estimada com base nas taxas de mercado. Sujeito à análise de crédito.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= CARROSSEL DE AVALIAÇÕES (COM FOTOS REAIS & MOVIMENTO AUTOMÁTICO) ================= -->
+  <section id="avaliacoes" class="py-14 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho das Avaliações (Sem ícone 'G', com Estrela Dourada) -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6 reveal-on-scroll">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/10 text-amber-500 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-star"></i>
+            </span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Avaliações Verificadas</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-brandDark">O que nossos clientes dizem</h2>
+          <p class="text-slate-500 text-sm sm:text-base mt-1">Mais de 420 pessoas já compraram, venderam e alugaram diretamente com segurança.</p>
+        </div>
+
+        <!-- Controles do Carrossel e Nota -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex text-amber-400 text-xs">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <span class="text-sm font-black text-brandDark">4.9 / 5</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="scrollReviews('left')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-brandPrimary hover:text-white hover:border-brandPrimary transition-all shadow-sm active:scale-95">
+              <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <button onclick="scrollReviews('right')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-brandPrimary hover:text-white hover:border-brandPrimary transition-all shadow-sm active:scale-95">
+              <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container do Carrossel de 10 Avaliações em Movimento Contínuo -->
+      <div id="reviewsCarousel" class="flex gap-6 overflow-x-auto pb-4 no-scrollbar scroll-smooth snap-x snap-mandatory">
+        
+        <!-- Avaliação 1 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Comprou Imóvel</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Comprei meu primeiro apartamento direto com o dono em São Paulo. O proprietário foi super prestativo e economizei mais de R$ 35 mil que iriam para comissão. Aprovamos o financiamento pela Caixa sem dor de cabeça!"
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80" alt="Rodrigo Cardoso" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Rodrigo Cardoso</h5>
+              <span class="text-xs text-slate-400">São Paulo, SP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 2 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Vendeu Cobertura</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Anunciei minha cobertura de alto padrão e fechei negócio em 3 semanas. Ter o contato direto pelo WhatsApp facilitou muito alinhar a proposta sem ruídos de terceiros."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80" alt="Fernanda Alencar" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Fernanda Alencar</h5>
+              <span class="text-xs text-slate-400">Rio de Janeiro, RJ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 3 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Alugou Studio</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Aluguei um studio perto do metrô direto com o proprietário. Sem burocracia excessiva ou fiador tradicional, combinamos o caução de forma transparente. Recomendo de olhos fechados!"
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80" alt="Lucas Mendes" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Lucas Mendes</h5>
+              <span class="text-xs text-slate-400">Curitiba, PR</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 4 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Comprou Casa</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "O simulador de financiamento aqui do site bateu exatamente com as taxas que conseguimos no Bradesco. A negociação direta com a dona da casa nos deu muita confiança."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80" alt="Camila & Nelson" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Camila & Nelson</h5>
+              <span class="text-xs text-slate-400">Belo Horizonte, MG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 5 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Proprietário</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Sempre tive receio de imobiliárias cobrarem valores altos e não darem atenção ao meu imóvel. Na Nosso Lar, anunciei grátis e atendi clientes muito qualificados."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=120&h=120&q=80" alt="Gustavo Silveira" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Gustavo Silveira</h5>
+              <span class="text-xs text-slate-400">Porto Alegre, RS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 6 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Alugou Apartamento</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Pude visitar o imóvel no mesmo dia conversando diretamente com a dona. Contrato simples, claro e justo para ambos os lados. Plataforma nota 10!"
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&h=120&q=80" alt="Beatriz Antunes" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Beatriz Antunes</h5>
+              <span class="text-xs text-slate-400">Campinas, SP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 7 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Comprou Apartamento</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Achei um imóvel acessível excelente. Fizemos a simulação no Itaú pelo próprio site e conseguimos financiar 80% do valor com tranquilidade."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&h=120&q=80" alt="Marcelo Santana" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Marcelo Santana</h5>
+              <span class="text-xs text-slate-400">Salvador, BA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 8 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Proprietária</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Vendi meu apartamento em menos de um mês sem pagar 6% de corretagem. A plataforma é fácil de mexer e os clientes já chegam cientes do valor."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80" alt="Patrícia Vieira" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Patrícia Vieira</h5>
+              <span class="text-xs text-slate-400">Florianópolis, SC</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 9 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Financiou Casa</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Excelente ferramenta de financiamento com o Banco Inter e Sicredi integrados. Foi o melhor suporte que tive durante todo o processo de aquisição!"
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&h=120&q=80" alt="Eduardo Gomes" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Eduardo Gomes</h5>
+              <span class="text-xs text-slate-400">Brasília, DF</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliação 10 -->
+        <div class="min-w-[320px] sm:min-w-[360px] max-w-[380px] bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm snap-start flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex text-amber-400 text-xs">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Alugou Cobertura</span>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              "Tratamento impecável e direto. Conseguimos acertar todos os detalhes do contrato de locação com rapidez. O site é rápido, moderno e super intuitivo."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=120&h=120&q=80" alt="Juliana Nogueira" class="w-11 h-11 rounded-full object-cover ring-2 ring-brandPrimary/20">
+            <div>
+              <h5 class="text-sm font-bold text-brandDark">Juliana Nogueira</h5>
+              <span class="text-xs text-slate-400">Goiânia, GO</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= RODAPÉ INSTITUCIONAL COM REDES SOCIAIS ================= -->
+  <footer class="bg-brandDarker text-slate-400 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-800/80">
+        
+        <!-- Coluna 1: Sobre com Logo Oficial -->
+        <div>
+          <a href="#" class="flex items-center mb-4">
+            <img src="imagens/logo 2.png" alt="Nosso Lar Imóveis" class="h-10 w-auto object-contain brightness-0 invert opacity-90">
+          </a>
+          <p class="text-sm text-slate-400 leading-relaxed mb-6">
+            A plataforma mais moderna para quem busca comprar, vender ou alugar imóveis diretamente com os proprietários com total transparência e segurança jurídica.
+          </p>
+        </div>
+
+        <!-- Coluna 2: Navegação Rápida -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4">Navegação</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="#imoveis" class="hover:text-brandSky transition-colors">Ver Imóveis Disponíveis</a></li>
+            <li><a href="#como-funciona" class="hover:text-brandSky transition-colors">Como Funciona a Negociação</a></li>
+            <li><a href="#financiamento" class="hover:text-brandSky transition-colors">Simulador de Financiamento</a></li>
+            <li><a href="#avaliacoes" class="hover:text-brandSky transition-colors">Depoimentos & Avaliações</a></li>
+            <li><button onclick="openModal('modalLogin')" class="hover:text-brandSky transition-colors text-left">Minha Conta / Login</button></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Institucional -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4">Segurança & Termos</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="#" class="hover:text-brandSky transition-colors">Validação de Proprietários</a></li>
+            <li><a href="#" class="hover:text-brandSky transition-colors">Modelos de Contrato Seguros</a></li>
+            <li><a href="#" class="hover:text-brandSky transition-colors">Termos de Uso</a></li>
+            <li><a href="#" class="hover:text-brandSky transition-colors">Política de Privacidade (LGPD)</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Contato & Suporte com Facebook e TikTok -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4">Contato & Suporte</h4>
+          <p class="text-sm text-slate-400 mb-4">Dúvidas sobre como anunciar ou negociar? Fale com nosso atendimento.</p>
+          
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- WhatsApp Direto para Você -->
+            <button onclick="openCustomWhatsApp()" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-emerald-600 flex items-center justify-center transition-all shadow-sm cursor-pointer" title="Falar no WhatsApp">
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+            </button>
+            <!-- Instagram -->
+            <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-pink-600 flex items-center justify-center transition-all shadow-sm">
+              <i class="fa-brands fa-instagram text-lg"></i>
+            </a>
+            <!-- Facebook -->
+            <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-blue-600 flex items-center justify-center transition-all shadow-sm">
+              <i class="fa-brands fa-facebook-f text-base"></i>
+            </a>
+            <!-- TikTok -->
+            <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-black flex items-center justify-center transition-all shadow-sm">
+              <i class="fa-brands fa-tiktok text-base"></i>
+            </a>
+            <!-- LinkedIn -->
+            <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-blue-700 flex items-center justify-center transition-all shadow-sm">
+              <i class="fa-brands fa-linkedin-in text-base"></i>
+            </a>
+            <!-- YouTube -->
+            <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-red-600 flex items-center justify-center transition-all shadow-sm">
+              <i class="fa-brands fa-youtube text-base"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>&copy; 2026 Nosso Lar Imóveis. Conectando pessoas e lares de forma direta e inovadora.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODAL: LOGIN / CADASTRO COM GOOGLE E FACEBOOK ================= -->
+  <div id="modalLogin" class="fixed inset-0 z-50 hidden bg-brandDarker/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeModal('modalLogin')" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <img src="imagens/logo 2.png" alt="Nosso Lar Imóveis" class="h-10 mx-auto object-contain mb-3">
+        <h3 class="text-xl font-bold font-heading text-brandDark">Acesse sua Conta</h3>
+        <p class="text-xs text-slate-500 mt-1">Veja imagens em alta definição, gerencie seus dados e acompanhe todo o seu histórico de negociação.</p>
+      </div>
+
+      <!-- Botões Sociais -->
+      <div class="space-y-3 mb-5">
+        <button onclick="performSocialLogin('Google')" class="w-full py-3 px-4 rounded-xl border border-slate-200 font-bold text-xs text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-3 transition-colors shadow-sm">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Continuar com Google
+        </button>
+
+        <button onclick="performSocialLogin('Facebook')" class="w-full py-3 px-4 rounded-xl bg-[#1877F2] font-bold text-xs text-white hover:bg-blue-600 flex items-center justify-center gap-3 transition-colors shadow-sm">
+          <i class="fa-brands fa-facebook-f text-sm"></i>
+          Continuar com Facebook
+        </button>
+      </div>
+
+      <div class="relative flex items-center justify-center mb-5">
+        <div class="border-t border-slate-200 w-full"></div>
+        <span class="bg-white px-3 text-[11px] text-slate-400 font-semibold uppercase whitespace-nowrap shrink-0">ou com e-mail</span>
+        <div class="border-t border-slate-200 w-full"></div>
+      </div>
+
+      <!-- Formulário de Login Tradicional -->
+      <form onsubmit="handleEmailLogin(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">E-mail</label>
+          <input type="email" id="loginEmail" required placeholder="seuemail@exemplo.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Senha</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl font-bold text-xs bg-brandPrimary hover:bg-brandHover text-white shadow-md transition-all">
+          Entrar na Conta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PAINEL DO USUÁRIO (PERFIL + GALERIA + HISTÓRICO COMPLETO) ================= -->
+  <div id="modalPerfil" class="fixed inset-0 z-50 hidden bg-brandDarker/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('modalPerfil')" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Cabeçalho do Perfil -->
+      <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 pb-6 border-b border-slate-100">
+        <div class="flex items-center gap-4 text-center sm:text-left">
+          <img id="userAvatarImg" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=140&h=140&q=80" alt="Avatar" class="w-16 h-16 rounded-2xl object-cover ring-2 ring-brandPrimary/30">
+          <div>
+            <div class="flex items-center gap-2 justify-center sm:justify-start">
+              <h3 class="text-xl font-black font-heading text-brandDark" id="profileDisplayName">Stefany Mazzei</h3>
+              <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">Cliente Verificado</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5" id="profileDisplayEmail">stefany@exemplo.com • Membro desde 2026</p>
+          </div>
+        </div>
+
+        <button onclick="logoutUser()" class="px-4 py-2 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 transition-colors">
+          <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Sair da Conta
+        </button>
+      </div>
+
+      <!-- Abas de Navegação Interna do Painel -->
+      <div class="flex items-center gap-3 mt-6 border-b border-slate-100 overflow-x-auto no-scrollbar">
+        <button onclick="switchUserTab('tabHistorico')" id="btnTabHistorico" class="tab-user-btn pb-3 px-3 text-xs font-bold text-brandPrimary border-b-2 border-brandPrimary">
+          <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Histórico Completo de Negociações
+        </button>
+        <button onclick="switchUserTab('tabImagens')" id="btnTabImagens" class="tab-user-btn pb-3 px-3 text-xs font-bold text-slate-500 hover:text-brandDark border-b-2 border-transparent">
+          <i class="fa-solid fa-images mr-1.5"></i> Galeria & Imagens Exclusivas
+        </button>
+        <button onclick="switchUserTab('tabMeusDados')" id="btnTabMeusDados" class="tab-user-btn pb-3 px-3 text-xs font-bold text-slate-500 hover:text-brandDark border-b-2 border-transparent">
+          <i class="fa-solid fa-user-pen mr-1.5"></i> Meus Dados & Atualização
+        </button>
+      </div>
+
+      <!-- ABA 1: HISTÓRICO COMPLETO COM TIMELINE DETALHADA -->
+      <div id="tabHistorico" class="user-tab-content py-6 space-y-6">
+        
+        <!-- Negociação 1: Locação Concluída -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Locação Finalizada</span>
+              <h4 class="text-sm font-bold text-brandDark mt-1">Apartamento Mobiliado com Lazer Completo</h4>
+              <p class="text-xs text-slate-500">Moema, São Paulo - SP • R$ 4.800/mês</p>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">Proprietária: Juliana Peixoto</span>
+          </div>
+
+          <!-- Linha do Tempo Passo a Passo -->
+          <div class="mt-4 space-y-3 relative before:absolute before:inset-0 before:left-3 before:h-full before:w-0.5 before:bg-slate-200 pl-8">
+            
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">1º Contato com o Proprietário</p>
+              <span class="text-[11px] text-slate-400">12/03/2026 às 14h32 • Mensagem enviada via WhatsApp</span>
+            </div>
+
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">Resposta do Dono & Agendamento de Visita</p>
+              <span class="text-[11px] text-slate-400">12/03/2026 às 14h48 • Resposta rápida e visita agendada para 14/03</span>
+            </div>
+
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">Negociação & Aceite da Proposta</p>
+              <span class="text-[11px] text-slate-400">15/03/2026 às 10h15 • Acordo fechado direto sem intermediários</span>
+            </div>
+
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">Envio da Minuta do Contrato</p>
+              <span class="text-[11px] text-slate-400">16/03/2026 às 11h20 • Minuta padrão validada pelo suporte</span>
+            </div>
+
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">Assinatura Digital do Contrato</p>
+              <span class="text-[11px] text-slate-400">17/03/2026 às 16h40 • Ambas as partes assinaram eletronicamente</span>
+            </div>
+
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white ring-2 ring-emerald-100"></span>
+              <p class="text-xs font-bold text-slate-800">Data Oficial de Locação & Entrega das Chaves</p>
+              <span class="text-[11px] text-emerald-600 font-semibold">20/03/2026 às 09h00 • Chaves entregues e vigência iniciada</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Negociação 2: Compra em Andamento -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Venda / Compra em Andamento</span>
+              <h4 class="text-sm font-bold text-brandDark mt-1">Apartamento Moderno Pronto para Morar</h4>
+              <p class="text-xs text-slate-500">Pinheiros, São Paulo - SP • R$ 640.000</p>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">Proprietária: Mariana Rezende</span>
+          </div>
+
+          <div class="mt-4 space-y-3 relative before:absolute before:inset-0 before:left-3 before:h-full before:w-0.5 before:bg-slate-200 pl-8">
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-100"></span>
+              <p class="text-xs font-bold text-slate-800">1º Contato & Envio de Proposta</p>
+              <span class="text-[11px] text-slate-400">02/04/2026 às 16h10</span>
+            </div>
+            <div class="relative">
+              <span class="absolute -left-8 top-1 w-4 h-4 rounded-full bg-amber-500 border-2 border-white ring-2 ring-amber-100"></span>
+              <p class="text-xs font-bold text-slate-800">Aprovação de Crédito Imobiliário (Caixa)</p>
+              <span class="text-[11px] text-amber-600 font-semibold">05/04/2026 • Em análise de certidões cartorárias</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ABA 2: GALERIA E IMAGENS EXCLUSIVAS -->
+      <div id="tabImagens" class="user-tab-content hidden py-6">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-sm font-bold text-brandDark">Fotos em Alta Definição dos seus Imóveis Salvos</h4>
+          <span class="text-xs text-slate-400">Exclusivo para membros logados</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80" alt="Foto 1" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80" alt="Foto 2" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Foto 3" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" alt="Foto 4" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80" alt="Foto 5" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80" alt="Foto 6" class="rounded-xl h-36 w-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer shadow-sm">
+        </div>
+      </div>
+
+      <!-- ABA 3: MEUS DADOS E ATUALIZAÇÃO -->
+      <div id="tabMeusDados" class="user-tab-content hidden py-6">
+        <form onsubmit="handleSaveProfileData(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nome Completo</label>
+              <input type="text" id="userFormName" value="Stefany Mazzei" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">E-mail</label>
+              <input type="email" id="userFormEmail" value="stefany@exemplo.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Telefone / WhatsApp</label>
+              <input type="text" id="userFormPhone" value="(11) 97486-6465" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">CPF (para contratos)</label>
+              <input type="text" id="userFormCPF" value="***.***.892-04" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            </div>
+          </div>
+          <button type="submit" class="px-6 py-2.5 rounded-xl font-bold text-xs bg-brandPrimary hover:bg-brandHover text-white shadow-md transition-all">
+            Salvar Alterações
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CONTATO DIRETO COM PROPRIETÁRIO ================= -->
+  <div id="modalOwner" class="fixed inset-0 z-50 hidden bg-brandDarker/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('modalOwner')" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-4 pb-5 border-b border-slate-100">
+        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-brandPrimary flex items-center justify-center text-xl font-bold font-heading" id="ownerInitials">
+          JD
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 class="text-lg font-bold text-brandDark" id="ownerName">Nome do Dono</h4>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+              <i class="fa-solid fa-circle-check text-[10px]"></i> Verificado
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Proprietário cadastrado • Responde em ~15 min</p>
+        </div>
+      </div>
+
+      <!-- Imóvel em Referência -->
+      <div class="mt-4 p-3 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100">
+        <img id="ownerPropertyImg" src="" alt="" class="w-14 h-14 rounded-xl object-cover">
+        <div>
+          <h5 id="ownerPropertyTitle" class="text-xs font-bold text-brandDark line-clamp-1">Título do Imóvel</h5>
+          <span id="ownerPropertyPrice" class="text-xs font-black text-brandPrimary font-heading">R$ 0</span>
+        </div>
+      </div>
+
+      <!-- Ações de Contato -->
+      <div class="mt-6 space-y-3">
+        <button onclick="openCustomWhatsApp()" class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 transition-all cursor-pointer">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          Chamar no WhatsApp Agora
+        </button>
+
+        <!-- Formulário Rápido de Agendamento de Visita -->
+        <div class="pt-4 border-t border-slate-100">
+          <h5 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Agendar Visita com o Proprietário</h5>
+          <form onsubmit="handleVisitSubmit(event)" class="space-y-3">
+            <input type="text" placeholder="Seu Nome Completo" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            <input type="tel" placeholder="Seu Telefone / WhatsApp" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+            <div class="grid grid-cols-2 gap-2">
+              <input type="date" required class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+              <select required class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brandPrimary">
+                <option value="Manhã">Manhã (09h - 12h)</option>
+                <option value="Tarde">Tarde (13h - 17h)</option>
+                <option value="Sábado de manhã">Sábado de manhã</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold text-xs bg-brandDark text-white hover:bg-slate-800 transition-colors">
+              Confirmar Solicitação de Visita
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* ---------- FUNÇÃO GLOBAL DE REDIRECIONAMENTO WHATSAPP ---------- */
+    const WHATSAPP_PHONE = "5511974866465";
+    const WHATSAPP_DEFAULT_MSG = "Olá! Tudo bem? 😊\n\nVim através do site da Nosso Lar Imóveis e gostaria de saber mais sobre seus projetos e trabalhos como desenvolvedora";
+
+    function openCustomWhatsApp() {
+      const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MSG)}`;
+      window.open(url, '_blank');
+    }
+
+    /* ---------- GERENCIAMENTO DE USUÁRIO / LOGIN SOCIAL ---------- */
+    let currentUser = null;
+
+    function performSocialLogin(provider) {
+      currentUser = {
+        name: "Stefany Mazzei",
+        email: "stefany@exemplo.com",
+        phone: "(11) 97486-6465",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=140&h=140&q=80",
+        provider: provider
+      };
+      updateAuthUI();
+      closeModal('modalLogin');
+      alert(`Login realizado com sucesso via ${provider}! Bem-vinda de volta.`);
+    }
+
+    function handleEmailLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      currentUser = {
+        name: email.split('@')[0],
+        email: email,
+        phone: "(11) 97486-6465",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=140&h=140&q=80",
+        provider: "E-mail"
+      };
+      updateAuthUI();
+      closeModal('modalLogin');
+      alert('Login realizado com sucesso!');
+    }
+
+    function updateAuthUI() {
+      if (currentUser) {
+        document.getElementById('btnLoginHeader').classList.add('hidden');
+        document.getElementById('btnUserProfileHeader').classList.remove('hidden');
+        document.getElementById('btnUserProfileHeader').classList.add('flex');
+        document.getElementById('headerUserName').innerText = currentUser.name;
+
+        document.getElementById('btnMobileLogin').classList.add('hidden');
+        document.getElementById('btnMobileProfile').classList.remove('hidden');
+
+        document.getElementById('profileDisplayName').innerText = currentUser.name;
+        document.getElementById('profileDisplayEmail').innerText = `${currentUser.email} • Conectado via ${currentUser.provider}`;
+      } else {
+        document.getElementById('btnLoginHeader').classList.remove('hidden');
+        document.getElementById('btnUserProfileHeader').classList.add('hidden');
+        document.getElementById('btnUserProfileHeader').classList.remove('flex');
+
+        document.getElementById('btnMobileLogin').classList.remove('hidden');
+        document.getElementById('btnMobileProfile').classList.add('hidden');
+      }
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      updateAuthUI();
+      closeModal('modalPerfil');
+      alert('Você saiu da sua conta.');
+    }
+
+    function switchUserTab(tabId) {
+      document.querySelectorAll('.tab-user-btn').forEach(btn => {
+        btn.classList.remove('text-brandPrimary', 'border-brandPrimary');
+        btn.classList.add('text-slate-500', 'border-transparent');
+      });
+      document.querySelectorAll('.user-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+
+      if (tabId === 'tabHistorico') {
+        document.getElementById('btnTabHistorico').classList.add('text-brandPrimary', 'border-brandPrimary');
+      } else if (tabId === 'tabImagens') {
+        document.getElementById('btnTabImagens').classList.add('text-brandPrimary', 'border-brandPrimary');
+      } else if (tabId === 'tabMeusDados') {
+        document.getElementById('btnTabMeusDados').classList.add('text-brandPrimary', 'border-brandPrimary');
+      }
+
+      document.getElementById(tabId).classList.remove('hidden');
+    }
+
+    function handleSaveProfileData(e) {
+      e.preventDefault();
+      const newName = document.getElementById('userFormName').value;
+      const newEmail = document.getElementById('userFormEmail').value;
+      if (currentUser) {
+        currentUser.name = newName;
+        currentUser.email = newEmail;
+        updateAuthUI();
+      }
+      alert('Dados cadastrais atualizados com sucesso!');
+    }
+
+    /* ---------- BANCO DE DADOS DE IMÓVEIS ---------- */
+    const propertiesData = [
+      {
+        id: 1,
+        title: "Cobertura Duplex Suspensa com Vista para o Parque",
+        location: "Vila Nova Conceição, São Paulo - SP",
+        type: "Cobertura",
+        category: "alto-padrao",
+        purpose: "venda",
+        price: 3250000,
+        condo: 2800,
+        bedrooms: 4,
+        bathrooms: 5,
+        area: 310,
+        parking: 4,
+        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Dr. Marcelo Castilho",
+          initials: "MC"
+        }
+      },
+      {
+        id: 2,
+        title: "Apartamento Moderno Pronto para Morar",
+        location: "Pinheiros, São Paulo - SP",
+        type: "Apartamento",
+        category: "acessivel",
+        purpose: "venda",
+        price: 640000,
+        condo: 680,
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 78,
+        parking: 1,
+        image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Mariana Rezende",
+          initials: "MR"
+        }
+      },
+      {
+        id: 3,
+        title: "Studio Design Próximo ao Metrô e Universidades",
+        location: "Vila Mariana, São Paulo - SP",
+        type: "Studio",
+        category: "aluguel-rapido",
+        purpose: "aluguel",
+        price: 2700,
+        condo: 420,
+        bedrooms: 1,
+        bathrooms: 1,
+        area: 36,
+        parking: 0,
+        image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Carlos Eduardo Nogueira",
+          initials: "CN"
+        }
+      },
+      {
+        id: 4,
+        title: "Casa Contemporânea em Condomínio Fechado",
+        location: "Granja Viana, Cotia - SP",
+        type: "Casa",
+        category: "alto-padrao",
+        purpose: "venda",
+        price: 2490000,
+        condo: 1100,
+        bedrooms: 4,
+        bathrooms: 4,
+        area: 420,
+        parking: 4,
+        image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Beatriz Villanova",
+          initials: "BV"
+        }
+      },
+      {
+        id: 5,
+        title: "Apartamento Aconchegante com Sacada Gourmet",
+        location: "Tatuapé, São Paulo - SP",
+        type: "Apartamento",
+        category: "acessivel",
+        purpose: "venda",
+        price: 495000,
+        condo: 550,
+        bedrooms: 2,
+        bathrooms: 1,
+        area: 64,
+        parking: 1,
+        image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Roberto Mendes",
+          initials: "RM"
+        }
+      },
+      {
+        id: 6,
+        title: "Apartamento Mobiliado com Lazer Completo",
+        location: "Moema, São Paulo - SP",
+        type: "Apartamento",
+        category: "aluguel-rapido",
+        purpose: "aluguel",
+        price: 4800,
+        condo: 890,
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 82,
+        parking: 2,
+        image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+        owner: {
+          name: "Juliana Peixoto",
+          initials: "JP"
+        }
+      }
+    ];
+
+    let currentPurpose = 'venda';
+    let currentCategory = 'todos';
+
+    /* ---------- RENDERIZAÇÃO DE IMÓVEIS ---------- */
+    function formatCurrency(val) {
+      return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+    }
+
+    function renderProperties(list) {
+      const grid = document.getElementById('propertyGrid');
+      const noResults = document.getElementById('noResults');
+
+      if (!list || list.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      grid.innerHTML = list.map(item => `
+        <div class="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+          <div>
+            <div class="relative h-64 overflow-hidden bg-slate-100">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${item.purpose === 'venda' ? 'bg-brandPrimary' : 'bg-sky-500'} shadow-md">
+                  ${item.purpose === 'venda' ? 'Para Venda' : 'Para Alugar'}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <div class="flex items-center gap-1.5 text-xs text-brandPrimary font-semibold mb-2">
+                <i class="fa-solid fa-location-dot"></i>
+                <span class="truncate">${item.location}</span>
+              </div>
+
+              <h4 class="text-base sm:text-lg font-bold font-heading text-brandDark mb-4 line-clamp-2 leading-snug group-hover:text-brandPrimary transition-colors">
+                ${item.title}
+              </h4>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-4 border-y border-slate-100 text-center mb-4 text-slate-600">
+                <div class="min-w-0">
+                  <i class="fa-solid fa-bed text-base text-brandPrimary block mb-1"></i>
+                  <span class="text-sm font-bold block">${item.bedrooms}</span>
+                  <span class="text-[11px] text-slate-400 font-medium">Dormitórios</span>
+                </div>
+                <div class="min-w-0">
+                  <i class="fa-solid fa-bath text-base text-brandPrimary block mb-1"></i>
+                  <span class="text-sm font-bold block">${item.bathrooms}</span>
+                  <span class="text-[11px] text-slate-400 font-medium">Banheiros</span>
+                </div>
+                <div class="min-w-0">
+                  <i class="fa-solid fa-ruler-combined text-base text-brandPrimary block mb-1"></i>
+                  <span class="text-sm font-bold block">${item.area} m²</span>
+                  <span class="text-[11px] text-slate-400 font-medium">Área</span>
+                </div>
+                <div class="min-w-0">
+                  <i class="fa-solid fa-car text-base text-brandPrimary block mb-1"></i>
+                  <span class="text-sm font-bold block">${item.parking}</span>
+                  <span class="text-[11px] text-slate-400 font-medium">Vagas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-slate-50">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+                ${item.purpose === 'venda' ? 'Valor de Venda' : 'Valor do Aluguel'}
+              </span>
+              <div class="text-xl font-black font-heading text-brandDark">
+                ${formatCurrency(item.price)}
+                ${item.purpose === 'aluguel' ? '<span class="text-xs font-normal text-slate-500">/mês</span>' : ''}
+              </div>
+            </div>
+
+            <button onclick="openOwnerContact(${item.id})" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-brandPrimary hover:bg-brandHover text-white shadow-md shadow-brandPrimary/20 transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              Falar com Dono
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ---------- FILTROS DA PLATAFORMA ---------- */
+    function setSearchType(type) {
+      currentPurpose = type;
+      const btnComprar = document.getElementById('btnTabComprar');
+      const btnAlugar = document.getElementById('btnTabAlugar');
+
+      if (type === 'venda') {
+        btnComprar.className = 'px-6 py-2 rounded-xl text-sm font-bold transition-all bg-brandPrimary text-white shadow-sm';
+        btnAlugar.className = 'px-6 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900';
+      } else {
+        btnAlugar.className = 'px-6 py-2 rounded-xl text-sm font-bold transition-all bg-brandPrimary text-white shadow-sm';
+        btnComprar.className = 'px-6 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900';
+      }
+      applyFilters();
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('active', 'bg-white', 'text-brandDark', 'border-brandPrimary');
+        btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+      });
+      event.target.classList.add('active', 'border-brandPrimary', 'text-brandDark');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const locationVal = document.getElementById('filterLocation').value.toLowerCase().trim();
+      const typeVal = document.getElementById('filterType').value;
+      const priceVal = document.getElementById('filterPrice').value;
+
+      const filtered = propertiesData.filter(item => {
+        if (currentPurpose && item.purpose !== currentPurpose) return false;
+        if (currentCategory !== 'todos' && item.category !== currentCategory) return false;
+        if (locationVal && !item.location.toLowerCase().includes(locationVal) && !item.title.toLowerCase().includes(locationVal)) return false;
+        if (typeVal !== 'todos' && item.type !== typeVal) return false;
+
+        if (priceVal !== 'qualquer') {
+          if (item.purpose === 'venda') {
+            if (priceVal === 'ate-300' && item.price > 300000) return false;
+            if (priceVal === '300-800' && (item.price <= 300000 || item.price > 800000)) return false;
+            if (priceVal === '800-2m' && (item.price <= 800000 || item.price > 2000000)) return false;
+            if (priceVal === 'acima-2m' && item.price <= 2000000) return false;
+          } else {
+            if (priceVal === 'ate-300' && item.price > 2000) return false;
+            if (priceVal === '300-800' && item.price > 5000) return false;
+          }
+        }
+        return true;
+      });
+
+      renderProperties(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('filterLocation').value = '';
+      document.getElementById('filterType').value = 'todos';
+      document.getElementById('filterPrice').value = 'qualquer';
+      currentCategory = 'todos';
+      currentPurpose = 'venda';
+      setSearchType('venda');
+    }
+
+    /* ---------- SIMULADOR DE FINANCIAMENTO COM AS LOGOS REAIS ---------- */
+    let currentBankRate = 9.8;
+    let currentBankName = 'Caixa Econômica';
+    let currentAmortization = 'SAC';
+
+    function selectBank(bankId, rate, name, logoPath) {
+      currentBankRate = rate;
+      currentBankName = name;
+      
+      document.querySelectorAll('.bank-card').forEach(b => {
+        b.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+
+      document.getElementById('selectedBankName').innerText = name;
+      document.getElementById('selectedBankRate').innerText = `${rate.toString().replace('.', ',')}% ao ano`;
+      document.getElementById('selectedBankLogo').src = logoPath;
+
+      calculateFinancing();
+    }
+
+    function setAmortization(type) {
+      currentAmortization = type;
+      const btnSAC = document.getElementById('btnSAC');
+      const btnPRICE = document.getElementById('btnPRICE');
+
+      if (type === 'SAC') {
+        btnSAC.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-brandPrimary text-white transition-all';
+        btnPRICE.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all';
+      } else {
+        btnPRICE.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-brandPrimary text-white transition-all';
+        btnSAC.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all';
+      }
+      calculateFinancing();
+    }
+
+    function calculateFinancing() {
+      const imovelVal = parseFloat(document.getElementById('inputImovelVal').value);
+      const entradaInput = document.getElementById('inputEntradaVal');
+      
+      const minEntrada = imovelVal * 0.20;
+      entradaInput.min = minEntrada;
+      
+      let entradaVal = parseFloat(entradaInput.value);
+      if (entradaVal < minEntrada) {
+        entradaVal = minEntrada;
+        entradaInput.value = minEntrada;
+      }
+      if (entradaVal > imovelVal * 0.90) {
+        entradaVal = imovelVal * 0.90;
+        entradaInput.value = entradaVal;
+      }
+
+      const percentEntrada = Math.round((entradaVal / imovelVal) * 100);
+      document.getElementById('labelImovelVal').innerText = formatCurrency(imovelVal);
+      document.getElementById('labelEntradaVal').innerText = formatCurrency(entradaVal);
+      document.getElementById('labelEntradaPercent').innerText = `${percentEntrada}%`;
+      document.getElementById('minEntradaSpan').innerText = `Mínimo (20%): ${formatCurrency(minEntrada)}`;
+
+      const financiadoVal = imovelVal - entradaVal;
+      document.getElementById('resultFinanciado').innerText = formatCurrency(financiadoVal);
+
+      const anos = parseInt(document.getElementById('selectPrazoAnos').value);
+      const meses = anos * 12;
+      const taxaMensal = Math.pow(1 + (currentBankRate / 100), 1 / 12) - 1;
+
+      let primeiraParcela = 0;
+      let ultimaParcela = 0;
+
+      if (currentAmortization === 'SAC') {
+        const amortizacaoMensal = financiadoVal / meses;
+        const jurosPrimeiroMes = financiadoVal * taxaMensal;
+        primeiraParcela = amortizacaoMensal + jurosPrimeiroMes;
+
+        const jurosUltimoMes = amortizacaoMensal * taxaMensal;
+        ultimaParcela = amortizacaoMensal + jurosUltimoMes;
+      } else {
+        primeiraParcela = financiadoVal * ( (taxaMensal * Math.pow(1 + taxaMensal, meses)) / (Math.pow(1 + taxaMensal, meses) - 1) );
+        ultimaParcela = primeiraParcela;
+      }
+
+      const rendaMinima = primeiraParcela / 0.30;
+      document.getElementById('resultPrimeiraParcela').innerText = formatCurrency(primeiraParcela);
+      document.getElementById('resultUltimaParcela').innerText = formatCurrency(ultimaParcela);
+      document.getElementById('resultRendaMinima').innerText = formatCurrency(rendaMinima);
+    }
+
+    /* ---------- CARROSSEL DE AVALIAÇÕES (AUTO-SCROLL) ---------- */
+    let autoScrollInterval = null;
+
+    function scrollReviews(direction) {
+      const container = document.getElementById('reviewsCarousel');
+      const scrollAmount = 380;
+      if (direction === 'left') {
+        if (container.scrollLeft <= 10) {
+          container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      } else {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }
+
+    function startAutoScrollReviews() {
+      if (autoScrollInterval) return;
+      autoScrollInterval = setInterval(() => {
+        scrollReviews('right');
+      }, 3200);
+    }
+
+    function stopAutoScrollReviews() {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    }
+
+    /* ---------- MODAL CONTATO COM O PROPRIETÁRIO ---------- */
+    function openOwnerContact(propId) {
+      const prop = propertiesData.find(p => p.id === propId);
+      if (!prop) return;
+
+      document.getElementById('ownerName').innerText = prop.owner.name;
+      document.getElementById('ownerInitials').innerText = prop.owner.initials;
+      document.getElementById('ownerPropertyTitle').innerText = prop.title;
+      document.getElementById('ownerPropertyPrice').innerText = formatCurrency(prop.price);
+      document.getElementById('ownerPropertyImg').src = prop.image;
+
+      openModal('modalOwner');
+    }
+
+    function handleVisitSubmit(e) {
+      e.preventDefault();
+      openCustomWhatsApp();
+      closeModal('modalOwner');
+    }
+
+    /* ---------- MODAL CONTROLS ---------- */
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    /* ---------- COUNT-UP ANIMATION DESACELERADO ---------- */
+    function animateCounters() {
+      const duration = 3500;
+      const startTime = performance.now();
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        const percentVal = Math.floor(easeOut * 100);
+        document.getElementById('countPercent').innerText = `${percentVal}%`;
+
+        const savingsVal = (easeOut * 4.2).toFixed(1);
+        document.getElementById('countSavings').innerText = `R$ ${savingsVal}M+`;
+
+        const propertiesVal = Math.floor(easeOut * 1850);
+        document.getElementById('countProperties').innerText = `+${propertiesVal.toLocaleString('pt-BR')}`;
+
+        const ratingVal = (easeOut * 4.9).toFixed(1);
+        document.getElementById('countRating').innerText = `${ratingVal}/5`;
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          document.getElementById('countPercent').innerText = `100%`;
+          document.getElementById('countSavings').innerText = `R$ 4.2M+`;
+          document.getElementById('countProperties').innerText = `+1.850`;
+          document.getElementById('countRating').innerText = `4.9/5`;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    /* ---------- SCROLL OBSERVER (REVEAL) & SETUP INICIAL ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProperties(propertiesData);
+      calculateFinancing();
+
+      const carousel = document.getElementById('reviewsCarousel');
+      if (carousel) {
+        startAutoScrollReviews();
+        carousel.addEventListener('mouseenter', stopAutoScrollReviews);
+        carousel.addEventListener('mouseleave', startAutoScrollReviews);
+        carousel.addEventListener('touchstart', stopAutoScrollReviews, { passive: true });
+        carousel.addEventListener('touchend', startAutoScrollReviews, { passive: true });
+      }
+
+      let counted = false;
+      const statsElem = document.getElementById('statsSection');
+      const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !counted) {
+            counted = true;
+            animateCounters();
+          }
+        });
+      }, { threshold: 0.2 });
+
+      if (statsElem) statsObserver.observe(statsElem);
+
+      const reveals = document.querySelectorAll('.reveal-on-scroll');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      reveals.forEach(el => revealObserver.observe(el));
+    });
+  </script>
+</body>
+</html>
